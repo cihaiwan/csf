@@ -3,8 +3,7 @@
    <script>
    var doornot;
    //默认字段数
-   var ix=3;
-   var fields=[]
+   var fields=["主键","部门id","创建时间"]
    $(document).ready(function(){
    	
    	var debug=false;
@@ -180,8 +179,10 @@
     }
     function del(_this){
         var y=confirm("是否确定删除")
-        if(y==true)
-            $(_this).parents("tr").remove()
+        if(y==true){
+         	$(_this).parents("tr").remove()
+        }
+           
     }
     function createTable(o,checked,pklen){
         var ck=checked||false
@@ -248,7 +249,7 @@
                 $("input[name='tabzh']").val(filename.split(";")[0])
                 $("input[name='tabdb']").val(filename.split(";")[1])
                 var lett=this.result.replace(/[(（][^)）]+[）)]|[-:.]/g,"").replace(/1/g,"一").replace(/2/g,"二").replace(/3/g,"三").replace(/4/g,"四").replace(/5/g,"五").replace(/6/g,"六").replace(/7/g,"七").replace(/8/g,"八").replace(/9/g,"九").split("\\n")
-               	fields=lett
+               	fields=fields.concat(lett)
                 createHeader();
                 var i=0;
                  var si= setInterval(function(){
@@ -352,10 +353,18 @@
     	
    		var fieldstmp={};
    		for(i in fields){
-   			fieldstmp[fields[i]]=$("[value='"+fields[i]+"']").parents("tr").html().replace(/<td>[^<]+<\/td>/,"")
+   			try{
+   				if($("[value='"+fields[i]+"']").length>0)
+   				fieldstmp[fields[i]]=$("[value='"+fields[i]+"']").parents("tr").html().replace(/<td>[^<]+<\/td>/,"")
+   			}catch(e){
+   				console.dir(e)
+   			}
+   			
    		}
-   		$("#tab tr:gt("+ix+")").remove();
-   		var j=ix+1;
+   		$("#tab tr:gt(0)").remove();
+   		//console.dir(fieldstmp)
+   		//console.dir(fields)
+   		var j=1;
    		for(i in fieldstmp){
    			$("#tab").append("<tr><td>"+(j++)+"</td>"+fieldstmp[i]+"</tr>")
    		}
@@ -364,8 +373,8 @@
    		$.each($("#tab [name='dst']"),function(){
    			var val=$(this).val()
    			var val2=""
-   			console.dir(val )
-   			console.dir(unqiue )
+   			//console.dir(val )
+   			//console.dir(unqiue )
    			if(val in unqiue){
    				var num=unqiue[val].match(/.*(\d)$/)[1]
    				var num2=(parseInt(num)+1)
