@@ -3,11 +3,20 @@
    <script>
    var doornot;
    //默认字段数
+   var specfields={unid:{src:"主键","dst":"unid",pk:true,len:40},
+   	deptid:{src:"部门id","dst":"deptid",pk:false,len:255},
+   	createtime:{src:"创建时间","dst":"createtime",pk:false,len:255}}
 
-   
-   var fields=["主键","部门id","创建时间"]
-
-   
+	var addfields=[]
+   var fields=[]
+   var createtype='${createtype}'||'1'
+  if(createtype=="1"){
+  	addfields=[specfields["unid"],specfields["deptid"],specfields["createtime"]]
+  }
+  
+  for(var i in addfields){
+  	fields.push(addfields[i].src)
+  }
    $(document).ready(function(){
    	
    	var debug=false;
@@ -101,9 +110,11 @@
                 sign: sign
             },
             success: function (data1) {
+            
                 var data=[]
                 var src=data1.trans_result[0]["src"]
-                var dst=data1.trans_result[0]["dst"].replace(/[.,]/,"")
+              
+                var dst=data1.trans_result[0]["dst"].replace(/(.*)(the)?number\s+of(.*)/ig,"$1$3 No").replace(/\s+(of|the|for|to|in|at|on)/ig,"").replace(/[.,]/,"").replace(/'[^\s]+/,"")
                 data["src"]=src;
                 var isExist=doornot.isExistDir(src);
                	var dststr="";
@@ -114,8 +125,7 @@
                }else{
                		dststr=isExist
                }
-                data["dst"]=dststr.replace(/(.*)(the)?numberof(.*)/ig,"$1$3No")
-                console.dir(data["dst"])
+               data["dst"]=dststr
                 eee2(data)
             }
         });
@@ -124,6 +134,11 @@
      *是否是下划线 大小写
      */
     function isOracle(dstss){
+    	if(dstss.join("").length>25){
+    		for(var i=0;i<dstss.length;i++){
+    			dstss[i]=dstss[i].substring(0,4)
+    		}
+    	}
         var have=$("input[name='have']:checked").val();
         var dststr=""
         if(have=="0"){
@@ -146,11 +161,9 @@
         var html="";
         html+="<tr><td>序号</td><td>中文</td><td>英文</td><td>类型</td><td>长度</td><td>可空</td><td>默认值</td><td>是否是主键</td></tr>";
         ixx=1
-        html+=createTable({ix:0,src:"主键","dst":"unid"},true,40)
-
-        html+=createTable({ix:1,src:"部门id","dst":"deptid"},false,255)
-
-        html+=createTable({ix:2,src:"创建时间","dst":"createtime"},false,255)
+        for(var i in addfields){
+        	html+=createTable(addfields[i],addfields[i].pk,addfields[i].len)
+        }
 
         $("#tab").append( html);
     }
@@ -191,7 +204,7 @@
     }
     function createTable(o,checked,pklen){
         var ck=checked||false
-        var html="<tr><td>"+(ixx++)+"</td><td><input name='src' value='"+o.src+"' /></td>" +
+        var html="<tr><td>"+(ixx++)+"</td><td><input name='src' value='"+o.src+"' readonly/></td>" +
                 "<td><input name='dst' value='"+o.dst+"' /></td>" +
                 "<td><select name='type' onchange='selectchange(this)'>"+typeselect()+"</select></td>" +
                 "<td><input name='len' value='"+(pklen||255)+"'/></td>" +
@@ -354,9 +367,11 @@
         return sql
     }
     function exportd(){
+    
     	var ch=["","a","b","c","d","e","f","g","h","i"]
     	
    		var fieldstmp={};
+   		
    		for(i in fields){
    			try{
    				if($("[value='"+fields[i]+"']").length>0)
@@ -373,7 +388,9 @@
    		for(i in fieldstmp){
    			$("#tab").append("<tr><td>"+(j++)+"</td>"+fieldstmp[i]+"</tr>")
    		}
-   		
+   		if($("#tab [name='dst']").length==0){
+   			return;
+   		}
    		var unqiue={}
    		$.each($("#tab [name='dst']"),function(){
    			var val=$(this).val()
@@ -445,6 +462,22 @@
             selectTypeInit=Oracle;
         }
     }
+    
+   $(document).on("change","[name]",function(){
+    	if($(this).get(0).nodeName=="SELECT"){
+    		var options=$(this).find("option")
+    		for(var i=0;i<options.length;i++){
+    			var option=options[i]
+    			if($(option).attr("value")==$(this).val()){
+    				$(option).attr("selected",true)
+    			}else{
+    				$(option).removeAttr("selected")
+    			}
+    		}
+    	}else{
+    	$(this).attr("value",$(this).val())
+    	}
+    })
 </script>
 <input type="file" id="f1"/>
 字段还有下划线<input type="radio" name="have" value="0" checked />是<input type="radio" value="1" name="have" />否
