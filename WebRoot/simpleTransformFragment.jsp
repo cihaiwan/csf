@@ -114,11 +114,13 @@
                 var data=[]
                 var src=data1.trans_result[0]["src"]
               
-                var dst=data1.trans_result[0]["dst"].replace(/(.*)(the)?number\s+of(.*)/ig,"$1$3 No").replace(/\s+(of|the|for|to|in|at|on)/ig,"").replace(/[.,]/,"").replace(/'[^\s]+/,"")
+                var dst=data1.trans_result[0]["dst"].replace(/(.*)(the)?number\s+of(.*)/ig,"$1$3 No").replace(/(^|\s+)(of|the|for|to|in|at|on)/ig,"").replace(/[.,]/,"").replace(/'[^\s]+/,"")
                 data["src"]=src;
                 var isExist=doornot.isExistDir(src);
                	var dststr="";
                	if(isExist==null){
+               	
+   					console.dir(dst)
                		data["dst"]=dst;
                		var dstss=data["dst"].trim().split(/\s+/);
                		dststr=isOracle(dstss)
