@@ -10,13 +10,7 @@
 	var addfields=[]
    var fields=[]
    var createtype='${createtype}'||'1'
-  if(createtype=="1"){
-  	addfields=[specfields["unid"],specfields["deptid"],specfields["createtime"]]
-  }
-  
-  for(var i in addfields){
-  	fields.push(addfields[i].src)
-  }
+
    $(document).ready(function(){
    	
    	var debug=false;
@@ -113,14 +107,13 @@
             
                 var data=[]
                 var src=data1.trans_result[0]["src"]
-              
-                var dst=data1.trans_result[0]["dst"].replace(/(.*)(the)?number\s+of(.*)/ig,"$1$3 No").replace(/(^|\s+)(of|the|for|to|in|at|on)/ig,"").replace(/[.,]/,"").replace(/'[^\s]+/,"")
+                var dst=data1.trans_result[0]["dst"].replace(/(.*)(the)?number\s+of(.*)/ig,"$1$3 No").replace(/(^|\s+)(of|the|for|to|in|at|on|and|or)/ig,"").replace(/[.,]/,"").replace(/'[^\s]+/,"")
+                console.dir(dst)
                 data["src"]=src;
                 var isExist=doornot.isExistDir(src);
                	var dststr="";
                	if(isExist==null){
-               	
-   					console.dir(dst)
+               
                		data["dst"]=dst;
                		var dstss=data["dst"].trim().split(/\s+/);
                		dststr=isOracle(dstss)
@@ -265,11 +258,21 @@
                     alert("你传入的文件格式不对")
                     return ;
                 }
+                if(createtype=="1"){
+  					addfields=[specfields["unid"],specfields["deptid"],specfields["createtime"]]
+ 				 }
+  				fields=[]
+  				for(var i in addfields){
+  					fields.push(addfields[i].src)
+  				}
+  
+  
                 var filename=file.name.split(".")[0];
                 $("input[name='tabzh']").val(filename.split(";")[0])
                 $("input[name='tabdb']").val(filename.split(";")[1])
                 var lett=this.result.replace(/[(（][^)）]+[）)]|[-:.]/g,"").replace(/1/g,"一").replace(/2/g,"二").replace(/3/g,"三").replace(/4/g,"四").replace(/5/g,"五").replace(/6/g,"六").replace(/7/g,"七").replace(/8/g,"八").replace(/9/g,"九").split("\\n")
                	fields=fields.concat(lett)
+               	
                 createHeader();
                 var i=0;
                  var si= setInterval(function(){
