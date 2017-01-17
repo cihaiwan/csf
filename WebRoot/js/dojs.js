@@ -1,5 +1,5 @@
 function Dojs(){
-	this.dirs={};
+	
 }
 EXTEND(Dojs,DoOrNot)
 Dojs.prototype.createdb=function(){
@@ -11,6 +11,7 @@ Dojs.prototype.createdb=function(){
 		var dst=column[x]["dst"]
 		try{
 		_thi.dirs[src]=dst
+		_thi.dirsf[dst]=src
 		}catch(e){console.dir(e)}
 	}
 	var sql=exportdsql();
@@ -35,6 +36,8 @@ Dojs.prototype.createdb=function(){
 	})
 }
 
+
+
 Dojs.prototype.init=function(){
 	var _thi=this;
 	$.ajax({
@@ -42,6 +45,13 @@ Dojs.prototype.init=function(){
 		dataType:"json",
 		success:function(d){
 			_thi.dirs=d
+		}
+	})
+	$.ajax({
+		url:"dic2.jsp",
+		dataType:"json",
+		success:function(d){
+			_thi.dirsf=d
 		}
 	})
 	$("#createdb").append(' <input type="button" value="创建表"  onclick="doornot.createdb()"/>')
@@ -73,3 +83,16 @@ Dojs.prototype.getSrcDst=function(){
         return  srcdst
 }
 
+Dojs.prototype.intable=function(key){
+	var success=false;
+	$.ajax({
+		url:"intable.jsp",
+		data:{field:key},
+		dataType:"json",
+		async:false,
+		success:function(d){
+			success=d.success
+		}
+	})
+	return success;
+}

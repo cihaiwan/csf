@@ -1,4 +1,7 @@
-function DoOrNot(){}
+function DoOrNot(){
+	this.dirs={};//src dst
+	this.dirsf={};//dst src
+}
 
 
 function inh(a){
@@ -21,6 +24,14 @@ DoOrNot.prototype.isExistDir=function(key){
     }else{
         return null
     }
+}
+DoOrNot.prototype.isExistDirf=function(key){
+	var ds=this.dirsf||{}
+	if(key in ds){
+		return ds[key]
+	}else{
+		return null
+	}
 }
 
 

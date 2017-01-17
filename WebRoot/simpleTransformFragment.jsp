@@ -83,8 +83,8 @@
         $("#tab").append(html)
     }
     function trans2(query){
-        var appid = '2015063000000001';
-        var key = '12345678';
+       	var appid = '2015063000000001';
+		var key = '12345678';
         var salt = (new Date).getTime();
         var from = 'zh';
         var to = 'en';
@@ -104,8 +104,7 @@
                 sign: sign
             },
             success: function (data1) {
-            
-                var data=[]
+            	var data=[]
                 var src=data1.trans_result[0]["src"]
                 var dst=data1.trans_result[0]["dst"].replace(/(.*)(the)?number\s+of(.*)/ig,"$1$3 No").replace(/(^|\s+)(of|the|for|to|in|at|on|and|or)/ig,"").replace(/[.,]/,"").replace(/'[^\s]+/,"")
                 console.dir(dst)
@@ -371,8 +370,28 @@
     //    console.dir(sql)
         return sql
     }
-    function exportd(){
     
+    function findIntable(unqiue,_th,val,val1,dn,ind,ch){
+    console.dir(unqiue)
+    			if(dn.intable(val1)==false){
+    			var val2=""
+   				if(val in unqiue){
+   					var num=unqiue[val].match(/.*(\d)$/)[1]
+   					var num2=(parseInt(num)+1)
+   					val2=val+num2+""
+   					$(_th).parents("tr").find("[name='dst']").val(val+ch[num2].toUpperCase())
+   				}else{
+   					val2=val+"0"
+   				}
+   				unqiue[val]=val2;
+    			}else{
+    				unqiue[val]=val+ind
+    				var ind1=(++ind)
+    				findIntable(unqiue,_th,val,val+ch[ind1].toUpperCase(),dn,ind1,ch)
+    			}
+   				
+    }
+    function exportd(){
     	var ch=["","a","b","c","d","e","f","g","h","i"]
     	
    		var fieldstmp={};
@@ -397,20 +416,15 @@
    			return;
    		}
    		var unqiue={}
-   		$.each($("#tab [name='dst']"),function(){
-   			var val=$(this).val()
-   			var val2=""
-   			//console.dir(val )
-   			//console.dir(unqiue )
-   			if(val in unqiue){
-   				var num=unqiue[val].match(/.*(\d)$/)[1]
-   				var num2=(parseInt(num)+1)
-   				val2=val+num2+""
-   				$(this).val(val+ch[num2].toUpperCase())
-   			}else{
-   				val2=val+"0"
-   			}
-   			unqiue[val]=val2;
+   		$.each($("#tab [name='src']"),function(){
+   			var src=$(this).val()
+   			 var isExist=doornot.isExistDir(src);
+   			var val=$(this).parents("tr").find("[name='dst']").val()
+   			 if(isExist==null){
+   			 	if("intable" in doornot){
+   			 		findIntable(unqiue,this,val,val,doornot,0,ch);
+   			 	}
+   			 }
    		})
    		
    		
