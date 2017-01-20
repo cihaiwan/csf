@@ -19,8 +19,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		boolean isok=false;
 		String fields=request.getParameter("fields");
 		String sql2=request.getParameter("sql");
-		out.println(sql2);
-		out.println(fields);
 		Connection conn = null;
 		String sql;
 		// MySQL的JDBC URL编写方式：jdbc:mysql://主机名称：连接端口/数据库的名称?参数=值
@@ -65,10 +63,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    			+"'"+m.get("srctype")+"',current_timestamp())");
 		    }
 		    isok=true;
-
-			response.setContentType("application/json;charset=utf-8");
-			 //   System.out.println(gson.toJson(m));
-			response.getWriter().write("{\"success\":\""+isok+"\"}");
 		} catch (SQLException e) {
 		    //System.out.println("MySQL操作错误");
 		    e.printStackTrace();
@@ -82,5 +76,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				e.printStackTrace();
 			}
 		}
+		response.setContentType("application/json;charset=utf-8");
+		response.getWriter().write("{\"success\":\""+isok+"\"}");
 		
 %>

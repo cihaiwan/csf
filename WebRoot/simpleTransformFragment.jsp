@@ -106,8 +106,12 @@
             success: function (data1) {
             	var data=[]
                 var src=data1.trans_result[0]["src"]
-                var dst=data1.trans_result[0]["dst"].replace(/(.*)(the)?number\s+of(.*)/ig,"$1$3 No").replace(/(^|\s+)(of|the|for|to|in|at|on|and|or)/ig,"").replace(/[.,]/,"").replace(/'[^\s]+/,"")
-                console.dir(dst)
+                var dstt=data1.trans_result[0]["dst"]
+                if(dstt in filtermap){
+                
+                	dstt=filtermap[dstt];
+                }
+                var dst=dstt.replace(/(.*)(the)?number\s+of(.*)/ig,"$1$3 No").replace(/(^|\s+)(of|the|for|to|in|at|on|and|or)(\s+|$)/ig,"").replace(/[.,]/,"").replace(/'[^\s]+/,"")
                 data["src"]=src;
                 var isExist=doornot.isExistDir(src);
                	var dststr="";
@@ -392,8 +396,13 @@
    				
     }
     function exportd(){
-    	var ch=["","a","b","c","d","e","f","g","h","i"]
-    	
+    	 var have=$("input[name='have']:checked").val();
+    	 var ch=[];
+    	 if(have=="0"){
+    	 	ch=["","a","b","c","d","e","f","g","h","i"]
+    	 }else{
+    		ch=["","_a","_b","_c","_d","_e","_f","_g","_h","_i"]
+    	 }
    		var fieldstmp={};
    		
    		for(i in fields){
@@ -514,6 +523,7 @@
 
 </div>
 <div id="createdb"  style="display:none"></div>
+	<script src="js/filter.js"></script>
 	<script src="js/base.js"></script>
 	<script src="js/dojs.js"></script>
 	<script src="js/notdojs.js"></script>

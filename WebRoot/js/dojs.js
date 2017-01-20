@@ -22,6 +22,10 @@ Dojs.prototype.createdb=function(){
 		type:"post",
 		dataType:"json",
 		success:function(d){
+			if(d.success=="false"){
+				alert("创建未成功")
+				
+			}
 			/*console.dir(d)
 			if(d.success=="true"){
 				for(x in column){
