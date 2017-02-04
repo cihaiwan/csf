@@ -428,9 +428,10 @@
    		$.each($("#tab [name='src']"),function(){
    			var src=$(this).val()
    			 var isExist=doornot.isExistDir(src);
-   			var val=$(this).parents("tr").find("[name='dst']").val()
+   			
    			 if(isExist==null){
    			 	if("intable" in doornot){
+   			 	var have=$("input[name='have']:checked").val();
    			 		findIntable(unqiue,this,val,val,doornot,0,ch);
    			 	}
    			 }
