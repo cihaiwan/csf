@@ -17,7 +17,8 @@ var filterfield=[
                  "table",
                  "test",
                  "union",
-                 "where"
+                 "where",
+                 "date"
                  ]
 var filtermap=(function(){
 		var f={}

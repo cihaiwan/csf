@@ -3,20 +3,9 @@
    <script>
    var doornot;
    //默认字段数
-   var specfields={unid:{src:"原主键","dst":"z_oldunid",pk:false,len:40},
-   	unid1:{src:"主键","dst":"unid",pk:true,len:40},
-   	z_id:{src:"主键","dst":"z_id",pk:true,len:40},
+   var specfields={unid:{src:"主键","dst":"unid",pk:true,len:40},
    	deptid:{src:"部门id","dst":"deptid",pk:false,len:255},
-   	z_deptid:{src:"部门id","dst":"z_deptid",pk:false,len:255},
-   	createtime:{src:"创建时间","dst":"createtime",pk:false,len:255},
-   	z_createtime:{src:"创建时间","dst":"z_createtime",pk:false,len:255},
-   	updatetimeStamp:{src:"更新时间戳","dst":"updatetimeStamp",pk:false,len:255},
-   	z_updatetimeStamp:{src:"更新时间戳","dst":"z_updatetimeStamp",pk:false,len:255},
-   	bloodKinshipId:{src:"血缘ID","dst":"bloodKinshipId",pk:false,len:255},
-   	z_bloodKinshipId:{src:"血缘ID","dst":"z_bloodKinshipId",pk:false,len:255},
-   	tableSource:{src:"字段来源","dst":"tableSource",pk:false,len:255},
-   	z_tableSource:{src:"字段来源","dst":"z_tableSource",pk:false,len:255}
-   	}
+   	createtime:{src:"创建时间","dst":"createtime",pk:false,len:255}}
 
 	var addfields=[]
    var fields=[]
@@ -93,8 +82,7 @@
         html+=createTable({src:data.src,dst:data.dst})
         $("#tab").append(html)
     }
-    function trans2(query,converquery){
-    console.dir(converquery+":"+query)
+    function trans2(query){
        	var appid = '2015063000000001';
 		var key = '12345678';
         var salt = (new Date).getTime();
@@ -116,10 +104,8 @@
                 sign: sign
             },
             success: function (data1) {
-            console.dir(data1)
             	var data=[]
-                //var src=data1.trans_result[0]["src"]
-                var src=converquery
+                var src=data1.trans_result[0]["src"]
                 var dstt=data1.trans_result[0]["dst"]
                 if(dstt in filtermap){
                 
@@ -276,10 +262,8 @@
                     return ;
                 }
                 if(createtype=="1"){
-  					addfields=[specfields["unid1"],specfields["deptid"],specfields["createtime"],specfields["updatetimeStamp"],specfields["bloodKinshipId"]]
- 				 }else if(createtype=="2"){
- 				 	addfields=[specfields["z_id"],specfields["z_deptid"],specfields["z_createtime"],specfields["z_updatetimeStamp"],specfields["z_bloodKinshipId"],specfields["z_tableSource"],specfields["unid"]]
- 				 }
+  					addfields=[specfields["unid"],specfields["deptid"],specfields["createtime"]]
+ 				}
   				fields=[]
   				for(var i in addfields){
   					fields.push(addfields[i].src)
@@ -289,13 +273,13 @@
                 var filename=file.name.split(".")[0];
                 $("input[name='tabzh']").val(filename.split(";")[0])
                 $("input[name='tabdb']").val(filename.split(";")[1])
-                var lett=this.result.split("\\n")
+                var lett=this.result.replace(/[(（][^)）]+[）)]|[-:.]/g,"").replace(/1/g,"一").replace(/2/g,"二").replace(/3/g,"三").replace(/4/g,"四").replace(/5/g,"五").replace(/6/g,"六").replace(/7/g,"七").replace(/8/g,"八").replace(/9/g,"九").split("\\n")
                	fields=fields.concat(lett)
                	
                 createHeader();
                 var i=0;
                  var si= setInterval(function(){
-                    trans2(lett[i].replace(/[(（][^)）]+[）)]|[-:.]/g,"").replace(/1/g,"一").replace(/2/g,"二").replace(/3/g,"三").replace(/4/g,"四").replace(/5/g,"五").replace(/6/g,"六").replace(/7/g,"七").replace(/8/g,"八").replace(/9/g,"九").replace(/是否/,"is "),lett[i])
+                    trans2(lett[i])
                   i++;
                     if(i==lett.length){
                         clearInterval(si)
