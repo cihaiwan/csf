@@ -18,7 +18,8 @@ var filterfield=[
                  "test",
                  "union",
                  "where",
-                 "date"
+                 "date",
+                 "signal"
                  ]
 var filtermap=(function(){
 		var f={}
