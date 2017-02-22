@@ -17,15 +17,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <%
 		boolean isok=false;
+		boolean exists=false;
 		String fields=request.getParameter("fields");
 		String sql2=request.getParameter("sql");
+		String dburl=request.getParameter("dburl");
 		Connection conn = null;
 		String sql;
 		// MySQL的JDBC URL编写方式：jdbc:mysql://主机名称：连接端口/数据库的名称?参数=值
 		// 避免中文乱码要指定useUnicode和characterEncoding
 		// 执行数据库操作之前要在数据库管理系统上创建一个数据库，名字自己定，
 		// 下面语句之前就要先创建javademo数据库
-		String url = "jdbc:mysql://192.168.2.202:4315/hysjzh_new?characterEncoding=UTF-8&amp;useOldAliasMetadataBehavior=true";
+		String url = dburl;
 		Gson gson=new GsonBuilder().create();
 		List<LinkedHashMap<String,Object>> list=gson.fromJson(fields,new TypeToken<List<LinkedHashMap<String,Object>>>(){}.getType());
 		try {
@@ -38,23 +40,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    Statement stmt = conn.createStatement();
 		    Map<String,Object> tab=list.get(0);
 		    try{
-		    	stmt.executeQuery("select count(*) from "+tab.get("dst").toString());	
+		    	stmt.executeQuery("select count(*) from "+tab.get("dst").toString());
+		    	exists=true;	
 		    	//System.out.println("表已经存在");
 		    }catch(Exception e){
 		    	
 		    	stmt.executeUpdate(sql2);
 		    }
 		    
-		    try{
-		    	stmt.executeQuery("select count(*) from t_dir");
-		    	//System.out.println("表已经存在");
-		    }catch(Exception e){
-			    sql = "create table  t_dir(unid varchar(32) primary key,src varchar(255) not null unique,dst varchar(255) not null ,srctype varchar(255),createtime timestamp )";
-			    int result = stmt.executeUpdate(sql);// executeUpdate语句会返回一个受影响的行数，如果返回-1就没有成功
-			    if (result != -1) {
-			        //System.out.println("创建数据表成功");
-			    }
-		    }
+		   
 		    
 		    for(Map<String,Object> m:list){
 		    	stmt.execute("delete from t_dir where src='"+m.get("src").toString()+"'");
@@ -77,6 +71,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			}
 		}
 		response.setContentType("application/json;charset=utf-8");
-		response.getWriter().write("{\"success\":\""+isok+"\"}");
+		response.getWriter().write("{\"success\":\""+isok+"\",\"exists\":\""+exists+"\"}");
 		
 %>
