@@ -230,9 +230,9 @@
     		if(createtype=="1"){
 				addfields=[specfields["unid1"],specfields["deptid"],specfields["createtime"],specfields["updatetimeStamp"],specfields["bloodKinshipId"]]
 			 }else if(createtype=="2"){
-			 	addfields=[specfields["z_id"],specfields["z_deptid"],specfields["z_createtime"],specfields["z_updatetimeStamp"],specfields["z_bloodKinshipId"],specfields["z_tableSource"],specfields["unid"]]
+			 	addfields=[specfields["z_id"],specfields["z_deptid"],specfields["z_createtime"],specfields["z_updatetimeStamp"],specfields["z_bloodKinshipId"],specfields["z_tableSource"],specfields["unid"],specfields["zz_status"]]
 			 }else if(createtype=="3"){
-			 	addfields=[specfields["zz_id"],specfields["zz_updatetimeStamp"],specfields["zz_bloodKinshipId"],specfields["zz_unid"],specfields["zz_createtime"],specfields["zz_deptid"],specfields["zz_tableSource"]]
+			 	addfields=[specfields["zz_id"],specfields["zz_updatetimeStamp"],specfields["zz_bloodKinshipId"],specfields["zz_unid"],specfields["zz_createtime"],specfields["zz_deptid"],specfields["zz_tableSource"],specfields["zz_status"]]
 			 }
 			fields=[]
 			for(var i in addfields){
@@ -361,7 +361,7 @@
                 	}else{
                 		clearInterval(mysi)
                 	}
-            	},2000)
+            	},5000)
             }
         }
     }
