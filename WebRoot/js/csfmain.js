@@ -361,7 +361,7 @@
                 	}else{
                 		clearInterval(mysi)
                 	}
-            	},5000)
+            	},2000)
             }
         }
     }
@@ -451,34 +451,55 @@
     }
     
     function findIntable(unqiue,_th,val,val1,dn,ind,ch){
-    	
-    			if(dn.intable(val1)==false){
-    			var val2=""
-   				if(val in unqiue){
-   					var num=unqiue[val].match(/.*(\d)$/)[1]
+    			var intable=dn.intable(val+ch[ind].toUpperCase())
+    			
+    			if(intable==true||(unqiue[val]||"").indexOf(val1)!=-1){
+    				if(unqiue[val]==undefined){
+    					unqiue[val]=val1
+    				}
+    				var num=ind
    					var num2=(parseInt(num)+1)
-   					val2=val+num2+""
-   					//console.dir(val+ch[num2].toUpperCase())
-   					$(_th).parents("tr").find("[name='dst']").val(val+ch[num2].toUpperCase())
-   				}else{
-   					val2=val+"0"
-   				}
-   				unqiue[val]=val2;
-    			}else{
-    				if(val in unqiue){
-       					var num=unqiue[val].match(/.*(\d)$/)[1]
-       					var num2=(parseInt(num)+1)
-       					var val2=""
-       					val2=val+num2+""
-       					//console.dir(val+ch[num2].toUpperCase())
-       					$(_th).parents("tr").find("[name='dst']").val(val+ch[num2].toUpperCase())
-       					unqiue[val]=val2;
-       				}else{
-       					unqiue[val]=val+ind
-        				var ind1=(++ind)
-        				findIntable(unqiue,_th,val,val+ch[ind1].toUpperCase(),dn,ind1,ch)
-       				}
+        			findIntable(unqiue,_th,val,val+num2+"",dn,num2,ch)
+    			}else {
+    				if(unqiue[val]==undefined){
+    					unqiue[val]=val1
+    				}else{
+    					unqiue[val]=unqiue[val]+val1
+    				}
+    				$(_th).parents("tr").find("[name='dst']").val(val+ch[ind].toUpperCase())
     			}
+//    			var intable=dn.intable(val+ch[ind].toUpperCase())
+//    			if((unqiue[val]||"").indexOf(val1)==-1&&intable==false){
+//    			var val2=""
+//   				if(unqiue[val]!=undefined){
+//   					var num2=0;
+//   					if(intable==true){
+//   						num2=ind
+//   					}else{
+//   						var num=unqiue[val].match(/.*(\d)$/)[1]
+//   						num2=(parseInt(num)+1)
+//   					}
+//   					val2=val+num2+""
+//   					//console.dir(val+ch[num2].toUpperCase())
+//   					$(_th).parents("tr").find("[name='dst']").val(val+ch[num2].toUpperCase())
+//   				}else{
+//   					val2=val+"0"
+//   				}
+//   				unqiue[val]=(unqiue[val]||"")+val2;
+//    			}else{
+//    				
+//    				if(intable==true){
+//    					
+//    				}else{
+//    					var num=(unqiue[val]).match(/.*(\d)$/)[1]
+//       					var num2=(parseInt(num)+1)
+//       					//unqiue[val]=(unqiue[val])+(val+num2+"")
+//        				
+//        				//console.dir((val+num2)+":"+num2+":"+unqiue[val])
+//            				findIntable(unqiue,_th,val,val+num2+"",dn,num2,ch)
+//    				}
+//    			}
+    			
     }
     function exportd(){
     	 var have=$("input[name='have']:checked").val();
@@ -516,7 +537,7 @@
 			var val=$(this).parents("tr").find("[name='dst']").val()
    			 if(isExist==null){
    			 	if("intable" in doornot){
-   			 		findIntable(unqiue,this,val,val,doornot,0,ch);
+   			 		findIntable(unqiue,this,val,val+"0",doornot,0,ch);
    			 	}
    			 }
    		})

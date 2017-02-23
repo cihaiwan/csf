@@ -19,7 +19,7 @@
    	
    	
    	zz_id:{src:"z主键","dst":"z_id",pk:true,len:40},
-   	zz_status:{src:"数据状态","dst":"z_status",pk:false,len:255},
+   	zz_status:{src:"z数据状态","dst":"z_status",pk:false,len:255},
    	zz_updatetimeStamp:{src:"z更新时间戳","dst":"z_updatetimeStamp",pk:false,len:255},
    	zz_bloodKinshipId:{src:"z血缘ID","dst":"z_bloodKinshipId",pk:false,len:255},
    	zz_unid:{src:"主键","dst":"z_oldunid",pk:false,len:40},   	
