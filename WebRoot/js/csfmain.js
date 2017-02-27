@@ -367,7 +367,7 @@
                 	}else{
                 		clearInterval(mysi)
                 	}
-            	},2000)
+            	},1000)
             }
         }
     }
