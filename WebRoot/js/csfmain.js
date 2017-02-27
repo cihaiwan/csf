@@ -109,6 +109,9 @@
            }else{
         	 	var dststr="";
            		dststr=isExist
+           		
+           		var data=[]
+           		data["src"]=converquery;
            		data["dst"]=dststr
                 eee2(data)
            }
