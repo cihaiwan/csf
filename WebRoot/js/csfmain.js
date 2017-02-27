@@ -63,54 +63,57 @@
         $("#tab").append(html)
     }
     function trans2(query,converquery){
-    	//console.dir(query)
-       	var appid = '2015063000000001';
-		var key = '12345678';
-        var salt = (new Date).getTime();
-        var from = 'zh';
-        var to = 'en';
-        var str1 = appid + query + salt +key;
-        var sign = MD5(str1);
-        $.ajax({
-            url: 'http://api.fanyi.baidu.com/api/trans/vip/translate',
-            type: 'get',
-            async:false,
-            dataType: 'jsonp',
-            data: {
-                q: query,
-                appid: appid,
-                salt: salt,
-                from: from,
-                to: to,
-                sign: sign
-            },
-            success: function (data1) {
-            //console.dir(data1)
-            	var data=[]
-                //var src=data1.trans_result[0]["src"]
-                var src=converquery
-                var dstt=data1.trans_result[0]["dst"].toLowerCase()
-            	
-                if(dstt in filtermap){
-                
-                	dstt=filtermap[dstt];
-                }
-                var dst=dstt.replace(/(.*)(the)?number\s+of(.*)/ig,"$1$3 No").replace(/(^|\s+)(of|the|for|to|in|at|on|and|or)(\s+|$)/ig,"").replace(/[.,-/]/g,"").replace(/'[^\s]+/,"")
-                data["src"]=src;
-                var isExist=doornot.isExistDir(src);
-               	var dststr="";
-               	if(isExist==null){
-               
-               		data["dst"]=dst;
-               		var dstss=data["dst"].trim().split(/\s+/);
-               		dststr=isOracle(dstss)
-               }else{
-               		dststr=isExist
-               }
-               data["dst"]=dststr
+    	  var isExist=doornot.isExistDir(converquery);
+    		if(isExist==null){
+    			var appid = '2015063000000001';
+    			var key = '12345678';
+    	        var salt = (new Date).getTime();
+    	        var from = 'zh';
+    	        var to = 'en';
+    	        var str1 = appid + query + salt +key;
+    	        var sign = MD5(str1);
+    	        $.ajax({
+    	            url: 'http://api.fanyi.baidu.com/api/trans/vip/translate',
+    	            type: 'get',
+    	            async:false,
+    	            dataType: 'jsonp',
+    	            data: {
+    	                q: query,
+    	                appid: appid,
+    	                salt: salt,
+    	                from: from,
+    	                to: to,
+    	                sign: sign
+    	            },
+    	            success: function (data1) {
+    	            //console.dir(data1)
+    	            	var data=[]
+    	                //var src=data1.trans_result[0]["src"]
+    	                var src=converquery
+    	                var dstt=data1.trans_result[0]["dst"].toLowerCase()
+    	            	
+    	                if(dstt in filtermap){
+    	                
+    	                	dstt=filtermap[dstt];
+    	                }
+    	                var dst=dstt.replace(/(.*)(the)?number\s+of(.*)/ig,"$1$3 No").replace(/(^|\s+)(of|the|for|to|in|at|on|and|or)(\s+|$)/ig,"").replace(/[.,-/]/g,"").replace(/'[^\s]+/,"")
+    	                data["src"]=src;
+    	               	var dststr="";
+	               		data["dst"]=dst;
+	               		var dstss=data["dst"].trim().split(/\s+/);
+	               		dststr=isOracle(dstss)
+    	               data["dst"]=dststr
+    	                eee2(data)
+    	            }
+    	        });
+           }else{
+        	 	var dststr="";
+           		dststr=isExist
+           		data["dst"]=dststr
                 eee2(data)
-            }
-        });
+           }
+    	//console.dir(query)
+       	
     }
     /* 
      *是否是下划线 大小写
