@@ -48,7 +48,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    	Map<String,String> m=new HashMap<String,String>();
 		    while(resultSet.next()){
 		    	
-		    	String src=resultSet.getString("src");
+		    	String src=resultSet.getString("src").toLowerCase();
 		    	String dst=resultSet.getString("dst");
 		    	m.put(src,dst);
 		    }
