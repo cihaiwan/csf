@@ -233,7 +233,7 @@
 			 	addfields=[specfields["z_id"],specfields["z_deptid"],specfields["z_createtime"],specfields["z_updatetimeStamp"],specfields["z_bloodKinshipId"],specfields["z_tableSource"],specfields["unid"],specfields["zz_status"]]
 			 }else if(createtype=="3"){
 			 	addfields=[specfields["zz_id"],specfields["zz_updatetimeStamp"],specfields["zz_bloodKinshipId"],specfields["zz_unid"],specfields["zz_createtime"],specfields["zz_deptid"],specfields["zz_tableSource"],specfields["zz_status"]]
-			 }
+			 }else if(createtype=="4"){addfields=[specfields["zz_id"]]}
 			fields=[]
 			for(var i in addfields){
 				fields.push(addfields[i].src)
