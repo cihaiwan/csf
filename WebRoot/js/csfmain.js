@@ -1,6 +1,8 @@
  
 	var converover=true
 	var count=0;
+	
+	
     function trans(query){
         var appid = '2015063000000001';
         var key = '12345678';
@@ -242,13 +244,22 @@
 			 }else if(createtype=="4"){addfields=[specfields["zz_id"]]}
 			fields=[]
 			for(var i in addfields){
-				fields.push(addfields[i].src)
+				fields.push(addfields[i].src.toLowerCase())
 			}
       //   var filename=file.name.split(".")[0];
          $("input[name='tabzh']").val(filename.split(";")[0])
          $("input[name='tabdb']").val(filename.split(";")[1])
          var lett=_obj.result.split("\\n")
-        fields=fields.concat(lett)
+        
+         var fields2=fields.concat(lett)
+         fields=(function(){
+        	 var fields22=[]
+        	 for(var ia in fields2 ){
+        		 fields22.push(fields2[ia].toLowerCase())
+        	 }
+        	 return fields22;
+         })()
+        console.dir(fields)
          createHeader();
          var i=0;
           var si= setInterval(function(){

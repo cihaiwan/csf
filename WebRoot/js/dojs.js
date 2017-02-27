@@ -81,6 +81,7 @@ Dojs.prototype.init=function(){
 		data:{dburl:_thi.dburl},
 		success:function(d){
 			_thi.dirs=d
+			console.dir(d)
 		}
 	})
 	$.ajax({
