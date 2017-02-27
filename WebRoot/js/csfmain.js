@@ -63,54 +63,57 @@
         $("#tab").append(html)
     }
     function trans2(query,converquery){
-    	//console.dir(query)
-       	var appid = '2015063000000001';
-		var key = '12345678';
-        var salt = (new Date).getTime();
-        var from = 'zh';
-        var to = 'en';
-        var str1 = appid + query + salt +key;
-        var sign = MD5(str1);
-        $.ajax({
-            url: 'http://api.fanyi.baidu.com/api/trans/vip/translate',
-            type: 'get',
-            async:false,
-            dataType: 'jsonp',
-            data: {
-                q: query,
-                appid: appid,
-                salt: salt,
-                from: from,
-                to: to,
-                sign: sign
-            },
-            success: function (data1) {
-            //console.dir(data1)
-            	var data=[]
-                //var src=data1.trans_result[0]["src"]
-                var src=converquery
-                var dstt=data1.trans_result[0]["dst"].toLowerCase()
-            	
-                if(dstt in filtermap){
-                
-                	dstt=filtermap[dstt];
-                }
-                var dst=dstt.replace(/(.*)(the)?number\s+of(.*)/ig,"$1$3 No").replace(/(^|\s+)(of|the|for|to|in|at|on|and|or)(\s+|$)/ig,"").replace(/[.,-/]/g,"").replace(/'[^\s]+/,"")
-                data["src"]=src;
-                var isExist=doornot.isExistDir(src);
-               	var dststr="";
-               	if(isExist==null){
-               
-               		data["dst"]=dst;
-               		var dstss=data["dst"].trim().split(/\s+/);
-               		dststr=isOracle(dstss)
-               }else{
-               		dststr=isExist
-               }
-               data["dst"]=dststr
+    	  var isExist=doornot.isExistDir(converquery);
+    		if(isExist==null){
+    			var appid = '2015063000000001';
+    			var key = '12345678';
+    	        var salt = (new Date).getTime();
+    	        var from = 'zh';
+    	        var to = 'en';
+    	        var str1 = appid + query + salt +key;
+    	        var sign = MD5(str1);
+    	        $.ajax({
+    	            url: 'http://api.fanyi.baidu.com/api/trans/vip/translate',
+    	            type: 'get',
+    	            async:false,
+    	            dataType: 'jsonp',
+    	            data: {
+    	                q: query,
+    	                appid: appid,
+    	                salt: salt,
+    	                from: from,
+    	                to: to,
+    	                sign: sign
+    	            },
+    	            success: function (data1) {
+    	            //console.dir(data1)
+    	            	var data=[]
+    	                //var src=data1.trans_result[0]["src"]
+    	                var src=converquery
+    	                var dstt=data1.trans_result[0]["dst"].toLowerCase()
+    	            	
+    	                if(dstt in filtermap){
+    	                
+    	                	dstt=filtermap[dstt];
+    	                }
+    	                var dst=dstt.replace(/(.*)(the)?number\s+of(.*)/ig,"$1$3 No").replace(/(^|\s+)(of|the|for|to|in|at|on|and|or)(\s+|$)/ig,"").replace(/[.,-/]/g,"").replace(/'[^\s]+/,"")
+    	                data["src"]=src;
+    	               	var dststr="";
+	               		data["dst"]=dst;
+	               		var dstss=data["dst"].trim().split(/\s+/);
+	               		dststr=isOracle(dstss)
+    	               data["dst"]=dststr
+    	                eee2(data)
+    	            }
+    	        });
+           }else{
+        	 	var dststr="";
+           		dststr=isExist
+           		data["dst"]=dststr
                 eee2(data)
-            }
-        });
+           }
+    	//console.dir(query)
+       	
     }
     /* 
      *是否是下划线 大小写
@@ -361,7 +364,7 @@
                 	}else{
                 		clearInterval(mysi)
                 	}
-            	},5000)
+            	},2000)
             }
         }
     }
@@ -451,34 +454,55 @@
     }
     
     function findIntable(unqiue,_th,val,val1,dn,ind,ch){
-    	
-    			if(dn.intable(val1)==false){
-    			var val2=""
-   				if(val in unqiue){
-   					var num=unqiue[val].match(/.*(\d)$/)[1]
+    			var intable=dn.intable(val+ch[ind].toUpperCase())
+    			
+    			if(intable==true||(unqiue[val]||"").indexOf(val1)!=-1){
+    				if(unqiue[val]==undefined){
+    					unqiue[val]=val1
+    				}
+    				var num=ind
    					var num2=(parseInt(num)+1)
-   					val2=val+num2+""
-   					//console.dir(val+ch[num2].toUpperCase())
-   					$(_th).parents("tr").find("[name='dst']").val(val+ch[num2].toUpperCase())
-   				}else{
-   					val2=val+"0"
-   				}
-   				unqiue[val]=val2;
-    			}else{
-    				if(val in unqiue){
-       					var num=unqiue[val].match(/.*(\d)$/)[1]
-       					var num2=(parseInt(num)+1)
-       					var val2=""
-       					val2=val+num2+""
-       					//console.dir(val+ch[num2].toUpperCase())
-       					$(_th).parents("tr").find("[name='dst']").val(val+ch[num2].toUpperCase())
-       					unqiue[val]=val2;
-       				}else{
-       					unqiue[val]=val+ind
-        				var ind1=(++ind)
-        				findIntable(unqiue,_th,val,val+ch[ind1].toUpperCase(),dn,ind1,ch)
-       				}
+        			findIntable(unqiue,_th,val,val+num2+"",dn,num2,ch)
+    			}else {
+    				if(unqiue[val]==undefined){
+    					unqiue[val]=val1
+    				}else{
+    					unqiue[val]=unqiue[val]+val1
+    				}
+    				$(_th).parents("tr").find("[name='dst']").val(val+ch[ind].toUpperCase())
     			}
+//    			var intable=dn.intable(val+ch[ind].toUpperCase())
+//    			if((unqiue[val]||"").indexOf(val1)==-1&&intable==false){
+//    			var val2=""
+//   				if(unqiue[val]!=undefined){
+//   					var num2=0;
+//   					if(intable==true){
+//   						num2=ind
+//   					}else{
+//   						var num=unqiue[val].match(/.*(\d)$/)[1]
+//   						num2=(parseInt(num)+1)
+//   					}
+//   					val2=val+num2+""
+//   					//console.dir(val+ch[num2].toUpperCase())
+//   					$(_th).parents("tr").find("[name='dst']").val(val+ch[num2].toUpperCase())
+//   				}else{
+//   					val2=val+"0"
+//   				}
+//   				unqiue[val]=(unqiue[val]||"")+val2;
+//    			}else{
+//    				
+//    				if(intable==true){
+//    					
+//    				}else{
+//    					var num=(unqiue[val]).match(/.*(\d)$/)[1]
+//       					var num2=(parseInt(num)+1)
+//       					//unqiue[val]=(unqiue[val])+(val+num2+"")
+//        				
+//        				//console.dir((val+num2)+":"+num2+":"+unqiue[val])
+//            				findIntable(unqiue,_th,val,val+num2+"",dn,num2,ch)
+//    				}
+//    			}
+    			
     }
     function exportd(){
     	 var have=$("input[name='have']:checked").val();
@@ -516,7 +540,7 @@
 			var val=$(this).parents("tr").find("[name='dst']").val()
    			 if(isExist==null){
    			 	if("intable" in doornot){
-   			 		findIntable(unqiue,this,val,val,doornot,0,ch);
+   			 		findIntable(unqiue,this,val,val+"0",doornot,0,ch);
    			 	}
    			 }
    		})
