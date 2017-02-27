@@ -253,7 +253,7 @@
          var i=0;
           var si= setInterval(function(){
         	 if(lett[i]!=undefined&&lett[i]!="")
-             trans2(lett[i].replace("无意义的","").replace("/","").replace(/[(（][^)）]+[）)]|[-:._"“”]/g,"").replace(/1/g,"一").replace(/2/g,"二").replace(/3/g,"三").replace(/4/g,"四").replace(/5/g,"五").replace(/6/g,"六").replace(/7/g,"七").replace(/8/g,"八").replace(/9/g,"九").replace(/是否/,"is "),lett[i])
+             trans2(lett[i].replace("无意义的","").replace("/","").replace(/[(（][^)）]+[）)]|[-:._"“”]/g,"").replace(/1/g,"一").replace(/2/g,"二").replace(/3/g,"三").replace(/4/g,"四").replace(/5/g,"五").replace(/6/g,"六").replace(/7/g,"七").replace(/8/g,"八").replace(/9/g,"九").replace(/是否/,"is ").toLowerCase(),lett[i].toLowerCase())
 
              i++;
              if(i==lett.length){
