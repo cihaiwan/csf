@@ -259,7 +259,6 @@
         	 }
         	 return fields22;
          })()
-        console.dir(fields)
          createHeader();
          var i=0;
           var si= setInterval(function(){
