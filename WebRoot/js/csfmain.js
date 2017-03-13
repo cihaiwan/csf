@@ -166,7 +166,7 @@
         }else if(s=="number"){
             $(_this).parents("tr").find("input[name*='len']").val("")
         }else if(s=="varchar2"){
-            $(_this).parents("tr").find("input[name*='len']").val("255")
+            $(_this).parents("tr").find("input[name*='len']").val("128")
         }
 
     }
@@ -197,7 +197,7 @@
         var html="<tr><td>"+(ixx++)+"</td><td><input name='src' value='"+o.src+"' readonly/></td>" +
                 "<td><input name='dst' value='"+o.dst+"' /></td>" +
                 "<td><select name='type' onchange='selectchange(this)'>"+typeselect()+"</select></td>" +
-                "<td><input name='len' value='"+(pklen||255)+"'/></td>" +
+                "<td><input name='len' value='"+(pklen||128)+"'/></td>" +
                 (function(){
                     if(ck){
                         return "<td><select name='nullable'><option value='0'>是</option><option value='1' selected>否</option></select></td>"
@@ -220,7 +220,7 @@
         	"<td><input name='src' /></td>" +
                 "<td><input name='dst'  /></td>" +
                 "<td><select name='type' onchange='selectchange(this)'>"+typeselect()+"</select></td>" +
-                "<td><input name='len' value='255'/></td>" +
+                "<td><input name='len' value='128'/></td>" +
                 "<td><select name='nullable' selected><option value='0'>是</option><option value='1' >否</option></select></td>"+
                 "<td><input name='defaultvalue'/></td>" +
                 "<td><select name='pk'><option value='0'>是</option><option value='1' selected>否</option></select></td>"+
@@ -420,7 +420,13 @@
             }
             sql+=" \r\n";
         })
-        sql+=")comment '"+tabzh+"' ;";
+        sql+=")comment '"+tabzh+"' ;\r\n";
+        
+        $.each(columns,function(i){
+       	 if((this.type+"").indexOf("varchar")!=-1&&this.len=="128"){
+       		 sql+="alter table "+tabdb+" modify column "+this.dst+" varchar2(255);\r\n"
+       	 }
+       })
         //console.dir(sql)
         return sql
     }
@@ -461,6 +467,11 @@
         sql+="comment on table "+tabdb+" is '"+ tabzh+"';\r\n";
         $.each(columns,function(i){
             sql+="comment on column "+tabdb+"."+this.dst+" is '"+this.src+"';\r\n"
+        })
+         $.each(columns,function(i){
+        	 if((this.type+"").indexOf("varchar")!=-1&&this.len=="128"){
+        		 sql+="alter table "+tabdb+" modify "+this.dst+" varchar2(255);\r\n"
+        	 }
         })
     //    console.dir(sql)
         return sql
